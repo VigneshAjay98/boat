@@ -1,0 +1,15 @@
+{
+    "/js/summernote.min.js": "/js/summernote.min.js",
+    "/js/all.js": "/js/all.js",
+    "/front/js/front-common.js": "/front/js/front-common.js",
+    "/front/js/payment.js": "/front/js/payment.js",
+    "/css/app.css": "/css/app.css",
+    "/css/mail-invoice.css": "/css/mail-invoice.css",
+    "/css/front.css": "/css/front.css",
+    "/css/custom.css": "/css/custom.css",
+    "/js/front-libraries.js": "/js/front-libraries.js",
+    "/storage/img/default-avatar.png": "/storage/img/default-avatar.png",
+    "/storage/img/login-background.png": "/storage/img/login-background.png",
+    "/storage/img/YachFinderLogo.jpg": "/storage/img/YachFinderLogo.jpg",
+    "/storage/img/yatch-logo.png": "/storage/img/yatch-logo.png"
+}
