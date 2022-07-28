@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-boat
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-boat
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: laravel-boat
+        tier: backend
+    spec:
+      volumes:
+      - name: app-dir
+        hostPath:
+          path: "/host_mnt/c/Users/vigne/var/www/boat"
+      containers:
+      - name: laravel-boat
+        image: vigneshajay98/boat
+        volumeMounts:
+        - name: app-dir
+          mountPath: /var/www/boat
+        env:    # get environment variables from secrets
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-dbname
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-password
+        ports:
+          - containerPort: 9000
+            name: laravel-9000
+        lifecycle:  
+          postStart:   # commands that will be executed after container was created
+            exec:
+              command: 
+                - "sh" 
+                - "-c"
+                - >
+                  mv /var/www/boat/.env.example /var/www/boat/.env;
+                  php artisan key:generate;
+                  sed -i "s/DB_HOST=/DB_HOST=mysql/g" /var/www/boat/.env;
+                  sed -i "s/DB_DATABASE=laravel/DB_DATABASE=$MYSQL_DATABASE/g" /var/www/boat/.env;
+                  sed -i "s/DB_PASSWORD=/DB_PASSWORD=$MYSQL_PASSWORD/g" /var/www/boat/.env
+                # cd /var/www/boat;
+                # composer install;
+                # npm install;
+                # npm run prod;
+                # php artisan migrate;
+                # timeout 2m php artisan db:seed;
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.28
+          command:
+            - "sh" 
+            - "-c"
+            - >
+              chown -R www-data:www-data /var/www/boat;
+              chmod -R 777 /var/www/boat;
+              cp -r /var/www/boat/. "/host_mnt/c/Users/vigne/var/www/boat"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: laravel-boat
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: laravel-boat
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 9000
+  type: LoadBalancer

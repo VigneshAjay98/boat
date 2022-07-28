@@ -12,16 +12,15 @@ const mix = require('laravel-mix');
  */
 
 
-mix.js(
-      [
-         // 'resources/js/app.js',
-         "node_modules/summernote/dist/summernote.min.js",
-         "node_modules/summernote/dist/summernote-bs5.min.js",
-      ],
+// mix.js(
+//       [
+//          // 'resources/js/app.js',
+//          "node_modules/summernote/dist/summernote.min.js",
+//          "node_modules/summernote/dist/summernote-bs5.min.js",
+//       ],
 
-      'public/js')
-
-   .js('resources/js/all.js', 'public/js')
+//       'public/js')
+mix.js('resources/js/all.js', 'public/js')
    .js('resources/js/app-scripts/front-common.js', 'public/front/js')
    .js('resources/js/app-scripts/payment.js', 'public/front/js')
     .sass('resources/sass/app.scss', 'public/css')

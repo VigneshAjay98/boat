@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boat-nginx
+  labels:
+    tier: backend
+    app: boat-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boat-nginx
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: boat-nginx
+        tier: backend
+    spec:
+      containers:
+      - name: boat-nginx
+        image: nginx
+        volumeMounts:
+        - name: app-dir
+          mountPath: /var/www/boat
+        - name: config
+          mountPath: /etc/nginx/conf.d
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+      volumes:
+      - name: app-dir
+        hostPath:
+          path: "/host_mnt/c/Users/vigne/var/www/boat"
+      - name: config
+        configMap:
+          name: boat-nginx-config 
+          items:
+          - key: config
+            path: boat.conf
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: boat-nginx
+  labels:
+    tier: backend
+    app: boat-nginx
+spec:
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 80
+      # nodePort: 32380
+  selector:
+    tier: backend
+    app: boat-nginx
+  type: LoadBalancer
