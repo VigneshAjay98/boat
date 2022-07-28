@@ -20,6 +20,7 @@ const mix = require('laravel-mix');
 //       ],
 
 //       'public/js')
+
 mix.js('resources/js/all.js', 'public/js')
    .js('resources/js/app-scripts/front-common.js', 'public/front/js')
    .js('resources/js/app-scripts/payment.js', 'public/front/js')
